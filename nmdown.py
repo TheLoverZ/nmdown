@@ -3,6 +3,7 @@
 
 import os
 import re
+import socket
 from argparse import ArgumentParser
 from cloudmusic import make_songs, make_albums, make_playlists, make_artists
 from downloader.download import (
@@ -103,7 +104,14 @@ def main():
 
     config = args
     for url in urls:
-        down(url, config)
+        success = False
+        while not success:
+            try:
+                down(url, config)
+            except socket.timeout:
+                pass
+            else:
+                success = True
 
 
 if __name__ == '__main__':
